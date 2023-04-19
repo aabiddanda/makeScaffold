@@ -1,23 +1,23 @@
 ##########################################
 # SET CORRECTLY THESE 6 PATHS TO COMPILE #
 ##########################################
-BOOST_INC=
-BOOST_LIB=
-RMATH_INC=
-RMATH_LIB=
-HTSLD_INC=
-HTSLD_LIB=
+BOOST_INC=/home/abiddan1/bin/miniconda3/include/boost
+BOOST_LIB=/home/abiddan1/bin/miniconda3/lib
+RMATH_INC=/home/abiddan1/bin/miniconda3/include
+RMATH_LIB=/home/abiddan1/bin/miniconda3/lib
+HTSLD_INC=/home/abiddan1/bin/miniconda3/include
+HTSLD_LIB=/home/abiddan1/bin/miniconda3/lib
 
 #COMPILER MODE C++11
 CXX=g++ -std=c++0x
 
 #COMPILER FLAGS
-CXXFLAG_REL=-O2
+CXXFLAG_REL=-O3
 CXXFLAG_DBG=-g
 CXXFLAG_WRN=-Wall -Wextra -Wno-sign-compare -Wno-unused-local-typedefs -Wno-deprecated -Wno-unused-parameter
 
 #BASE LIBRARIES
-LIB_FLAGS=-lz -lbz2 -lm -lpthread -llzma
+LIB_FLAGS=-L/home/abiddan1/bin/miniconda3/lib -ldl -ldeflate -lz -lbz2 -lm -lpthread -llzma -lhts -lboost_iostreams -lboost_program_options
 
 #FILE LISTS
 BFILE=bin/makeScaffold
@@ -28,20 +28,14 @@ OFILE=$(shell for file in `find src -name *.cpp`; do echo obj/$$(basename $$file
 VPATH=$(shell for file in `find src -name *.cpp`; do echo $$(dirname $$file); done)
 
 #DEFAULT VERSION (I.E. UNIGE DESKTOP RELEASE VERSION)
-all: desktop
+all: exec 
 
 #UNIGE DESKTOP RELEASE VERSION
-desktop: RMATH_INC=$(HOME)/Tools/R-3.5.1/src/include
-desktop: RMATH_LIB=$(HOME)/Tools/R-3.5.1/src/nmath/standalone
-desktop: HTSLD_INC=$(HOME)/Tools/htslib-1.9
-desktop: HTSLD_LIB=$(HOME)/Tools/htslib-1.9
-desktop: BOOST_INC=/usr/include
-desktop: BOOST_LIB=/usr/lib/x86_64-linux-gnu
-desktop: CXXFLAG=$(CXXFLAG_REL) $(CXXFLAG_WRN)
-desktop: IFLAG=-Ilib/OTools -Ilib -I$(RMATH_INC) -I$(HTSLD_INC) -I$(BOOST_INC)
-desktop: LIB_FILES=$(RMATH_LIB)/libRmath.a $(HTSLD_LIB)/libhts.a $(BOOST_LIB)/libboost_iostreams.a $(BOOST_LIB)/libboost_program_options.a
-desktop: LDFLAG=$(CXXFLAG_REL)
-desktop: $(BFILE)
+exec: CXXFLAG=$(CXXFLAG_REL) $(CXXFLAG_WRN)
+exec: IFLAG=-Ilib/OTools -Ilib -I$(RMATH_INC) -I$(HTSLD_INC) -I$(BOOST_INC)
+exec: LIB_FILES=$(RMATH_LIB)/libRmath.a 
+exec: LDFLAG=$(CXXFLAG_REL)
+exec: $(BFILE)
 
 #COMPILATION RULES
 $(BFILE): $(OFILE)
